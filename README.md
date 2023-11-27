@@ -42,6 +42,10 @@ Suivez les instructions à l'écran pour fournir les références ou fichiers n�
 
 Consultez les résultats dans le fichier de sortie Excel généré.
 
+## **Exemples**
+
+
+![ On donne une liste de cve ](/images/1.pnj)
 
 
 
