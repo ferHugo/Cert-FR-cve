@@ -10,11 +10,11 @@ Fonctionnalités principales :
 
 - Matching dans un fichier Excel : Le script prend en entrée un fichier Excel avec une colonne de CVE, recherche les avis Cert-FR correspondants, et génère un fichier de sortie Excel avec les résultats.
 
-Installation
+## nstallation
 
 Pour exécuter le script, suivez ces étapes :
 
-Installer Python 3 : Téléchargez et installez Python 3.
+* Installer Python 3 *: Téléchargez et installez Python 3.
 
 Cloner le projet : Clonez ce projet depuis GitHub en utilisant la commande suivante :
 
@@ -28,7 +28,7 @@ bash
 
     pip install -r requirements.txt
 
-Utilisation
+## Utilisation
 
 Exécutez le script en utilisant la commande suivante :
 
@@ -41,6 +41,8 @@ Choisissez l'option correspondant à l'action souhaitée (Lister les CVE, Lister
 Suivez les instructions à l'écran pour fournir les références ou fichiers nécessaires.
 
 Consultez les résultats dans le fichier de sortie Excel généré.
+
+
 
 
 
