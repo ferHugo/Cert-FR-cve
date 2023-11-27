@@ -46,7 +46,7 @@ Consultez les résultats dans le fichier de sortie Excel généré.
 
 
 ![ On donne une liste de cve ](/images/1.png)
-![ L'Excel une fois le script qui a tourné ](/images/1.png)
+![ L'Excel une fois le script qui a tourné ](/images/2.png)
 
 
 
