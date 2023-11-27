@@ -30,11 +30,17 @@ bash
 
 ## **Utilisation**
 
+Exécutez le merger pour scrape les avis du CERT-FR (insére les données dans un json):
+
+bash
+
+    python3 merger.py
+
 Exécutez le script en utilisant la commande suivante :
 
 bash
 
-    python script.py
+    python3 extract_avis_cve.py
 
 Choisissez l'option correspondant à l'action souhaitée (Lister les CVE, Lister les avis, Matching dans un fichier).
 
