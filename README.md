@@ -1,8 +1,14 @@
 # Cert-FR-cve
-Script qui permet de match un CVE avec un avis du CERT-FR
+Installation
+Python 3
 
-Le crawler permet de scrappé le site du CERT-FR pour y récuperer tous les avis. 
-il va insérer les données dans le fichier DATA sous format JSON
+Assure-toi d'avoir Python 3 installé sur ta machine. Si ce n'est pas le cas, tu peux le télécharger et l'installer depuis le site officiel de Python.
+Bibliothèques Python
 
-Il faut ensuitre lancer le script extract_avis_cve qui permet de faire la comparaison entre des CVE et un avis s'il existe.
+Installe les bibliothèques Python requises en exécutant la commande suivante :
+
+bash
+
+pip install -r requirements.txt
+
 
