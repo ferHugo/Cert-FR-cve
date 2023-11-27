@@ -45,7 +45,8 @@ Consultez les résultats dans le fichier de sortie Excel généré.
 ## **Exemples**
 
 
-![ On donne une liste de cve ](/images/1.pnj)
+![ On donne une liste de cve ](/images/1.png)
+![ L'Excel une fois le script qui a tourné ](/images/1.png)
 
 
 
