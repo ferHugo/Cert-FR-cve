@@ -30,7 +30,7 @@ bash
 
 ## **Utilisation**
 
-Exécutez le merger pour scrape les avis du CERT-FR (insére les données dans un json):
+Exécutez le merger pour scraper les avis du CERT-FR (insére les données dans un json):
 
 bash
 
