@@ -14,7 +14,7 @@ Ce projet propose un script en Python permettant de faire correspondre des avis 
 
 Pour exécuter le script, suivez ces étapes :
 
-* Installer Python 3 *: Téléchargez et installez Python 3.
+*Installer Python 3*: Téléchargez et installez Python 3.
 
 Cloner le projet : Clonez ce projet depuis GitHub en utilisant la commande suivante :
 
