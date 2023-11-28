@@ -5,6 +5,8 @@ import argparse
 import pylightxl as xl
 import os
 from datetime import datetime
+import csv
+
 
 regex_cve = re.compile(r'CVE-\d{4}-\d{4,}')
 file_path = "./data/cert_fr_data.json"
@@ -36,6 +38,62 @@ def find_by_cve(data, reference, os_filters=None):
         return [sorted_results[0]]
     else:
         return []
+    
+def export_to_csv(data, file, main_sheet, source_column, destination_column):
+    csv_data = []  
+    header = ["CVE", "Avis", "Titre"]
+    csv_data.append(header)
+
+    db = xl.readxl(fn=file)
+    src = db.ws(ws=main_sheet).col(col=int(source_column))
+    src = [item.split('\n') if '\n' in item else [item] for item in src]
+    numero_ligne = 0
+    csv_data = []
+
+    # Numéro où commence le script
+    
+    for cve_list in src:
+        
+        if numero_ligne < 0:
+            continue
+        if type(cve_list) == list:
+            for cve_item in cve_list:
+                cert_fr = find_by_cve(data, cve_item)
+                for cve_data in cert_fr:
+                    
+                    if isinstance(cve_data, dict):
+                        reference = cve_data.get("Référence", "NR")
+                        title = cve_data.get("Titre", "NR")
+                        row_data = [cve_item, reference, title]
+                        csv_data.append(row_data)
+                    elif isinstance(cve_data, list):
+                        for item in cve_data:
+                            reference = item.get("Référence", "NR")
+                            title = item.get("Titre", "NR")
+                            row_data = [cve_item, reference, title]
+                            csv_data.append(row_data)
+                    else:
+                        reference = "NR"
+                        title = "NR"
+                        row_data = [cve_item, reference, title]
+                        csv_data.append(row_data)
+                    numero_ligne += 1
+
+    # Ajout pour afficher les données exportées
+    print(csv_data)
+    print("Données à exporter :")
+    for row in csv_data:
+        print(row)
+
+    # Ajout pour écrire les données dans le fichier CSV
+    with open("export.csv", mode="w", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        # Écrire l'en-tête
+        writer.writerow(['CVE', 'Avis', 'Titre'])
+        # Écrire les données
+        writer.writerows(csv_data)
+        
+    print("Export CSV réussi!")
 
 def ouverture_fichier(path):
     with open(file_path, 'r') as file:
@@ -43,6 +101,7 @@ def ouverture_fichier(path):
         return data
     
 def creation_excel(data, file, main_sheet, source_column, destination_column):
+ 
     db = xl.readxl(fn=file)
     src = db.ws(ws=main_sheet).col(col=int(source_column))
     dest = db.ws(ws=main_sheet).col(col=int(destination_column))
@@ -102,14 +161,13 @@ def creation_excel(data, file, main_sheet, source_column, destination_column):
         db.ws(ws=main_sheet).update_index(row=numero_ligne+1, col=int(destination_column) + 1, val=result_name)
         numero_ligne += 1
         print(numero_ligne)
-
-    xl.writexl(db=db, fn="sortie.xlsx") #Le fichier excel qui sera généré par le script
+        xl.writexl(db=db, fn="cve_et_avis.xlsx") #Le fichier excel qui sera généré par le script
 
 
 def extractor():
-    choice = input("\n\nQue souhaitez-vous faire ?\n\t1 - Lister les CVE d'un avis Cert-FR\n\t2 - Lister les avis Cert-FR qui traitent une CVE\n\t3 - Matching dans un fichier\n\t4 - Quitter\n\n")
+    choice = input("\n\nQue souhaitez-vous faire ?\n\t1 - Lister les CVE d'un avis Cert-FR\n\t2 - Lister les avis Cert-FR qui traitent une CVE\n\t3 - Matching dans un fichier\n\t4 - Voulez-vous exporter les données sous format CSV?\n\t5 - Quitter\n\n")
 
-    if choice == "4":
+    if choice == "5":
         return
     with open(file_path, 'r') as file:
         data = json.load(file)
@@ -144,14 +202,22 @@ def extractor():
             extractor()
 
         if choice == '3':
-            file = input("Chemin du fichier : ")
+            #chemin ou se trouve le fichier 
+            chemin = "/root/Cert-FR/"
+            fichier = input("Nom du fichier: (xxxxx.xlsx) : ")
+            file = chemin + fichier
             main_sheet = input("Nom de la feuille principale : ")
             source_column = input("Numéro de la colonne contenant les CVE (a=1, b=2, ...): ")
             destination_column = input("Numéro de la colonne de destination (a=1, b=2, ...): ")
-            #file = "/root/Cert-FR/test.xlsx"
-            #main_sheet = "test"
-            #source_column = "1"
-            #destination_column = '2'
             creation_excel(data, file, main_sheet, source_column, destination_column)
+        
+        if choice == '4':
+            chemin = "/root/Cert-FR/"
+            fichier = input("Nom du fichier: (xxxxx.xlsx) : ")
+            file = chemin + fichier
+            main_sheet = input("Nom de la feuille principale : ")
+            source_column = input("Numéro de la colonne contenant les CVE (a=1, b=2, ...): ")
+            destination_column = input("Numéro de la colonne de destination (a=1, b=2, ...): ")
+            export_to_csv(data, file, main_sheet, source_column, destination_column)
 
 extractor()
