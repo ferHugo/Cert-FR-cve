@@ -10,6 +10,8 @@ Ce projet propose un script en Python permettant de faire correspondre des avis 
 
 - Matching dans un fichier Excel : Le script prend en entrée un fichier Excel avec une colonne de CVE, recherche les avis Cert-FR correspondants, et génère un fichier de sortie Excel avec les résultats.
 
+- Matching dans un fichier CSV : le script prend en entrée un fichier Excel avec une colonne de CVE, recherche et génère un fichier de sortie CSV.
+
 ## **Installation**
 
 Pour exécuter le script, suivez ces étapes :
