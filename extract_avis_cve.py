@@ -6,10 +6,12 @@ import pylightxl as xl
 import os
 from datetime import datetime
 import csv
+import pandas as pd
 
 
 regex_cve = re.compile(r'CVE-\d{4}-\d{4,}')
 file_path = "./data/cert_fr_data.json"
+
 
 def find_by_cert_fr(data, reference):
     for d in data:
@@ -29,7 +31,7 @@ def find_by_cve(data, reference, os_filters=None):
             if cve_match:
                 cve_name = cve_match.group(0)
                 if cve_name.upper() == reference.strip().upper():
-                    if os_filters is None or any(os_filter.upper() in cve["Text"].upper() for os_filter in os_filters):
+                    if os_filters is None or any(os_filter.upper() in d["Systèmes affectés"][0].upper() for os_filter in os_filters):
                         results.append(d)
 
     sorted_results = sorted(results, key=lambda x: datetime.strptime(x["Date"], '%d/%m/%Y'), reverse=True)
@@ -38,6 +40,7 @@ def find_by_cve(data, reference, os_filters=None):
         return [sorted_results[0]]
     else:
         return []
+
     
 def export_to_csv(data, file, main_sheet, source_column, destination_column):
     csv_data = []  
@@ -80,13 +83,15 @@ def export_to_csv(data, file, main_sheet, source_column, destination_column):
                     numero_ligne += 1
 
     # Ajout pour afficher les données exportées
-    print(csv_data)
     print("Données à exporter :")
     for row in csv_data:
         print(row)
+    # Formate la date et l'heure comme tu le souhaites (par exemple, YYYY-MM-DD_HH-MM-SS)
+    now = datetime.now()
+    formatted_datetime = now.strftime("%Y-%m-%d_%H-%M-%S")
 
-    # Ajout pour écrire les données dans le fichier CSV
-    with open("export.csv", mode="w", newline="", encoding="utf-8") as file:
+    # Utilise le nom de fichier formaté lors de l'export
+    with open("csv/export.csv", mode="w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
         # Écrire l'en-tête
         writer.writerow(['CVE', 'Avis', 'Titre'])
@@ -101,13 +106,12 @@ def ouverture_fichier(path):
         return data
     
 def creation_excel(data, file, main_sheet, source_column, destination_column):
- 
     db = xl.readxl(fn=file)
     src = db.ws(ws=main_sheet).col(col=int(source_column))
     dest = db.ws(ws=main_sheet).col(col=int(destination_column))
     dest_name = db.ws(ws=main_sheet).col(col=int(destination_column) + 1)
     numero_ligne = 0
-    #Numéro ou commence le script
+    
     for cve_list in src:
         if numero_ligne < 0:
             continue
@@ -144,7 +148,7 @@ def creation_excel(data, file, main_sheet, source_column, destination_column):
         cert_fr = find_by_cve(data, cve_list)
         reference = []
         names = []
-        #On récupère les données (référence -> numéro du CVE, Titre -> titre du CVE)
+
         for cve_data in cert_fr:
             if isinstance(cve_data, dict):
                 reference.append(cve_data.get("Référence", "NR"))
@@ -155,14 +159,21 @@ def creation_excel(data, file, main_sheet, source_column, destination_column):
             else:
                 reference.append("NR")
                 names.append("NR")
+
         result = '\n'.join(reference)
         result_name = '\n'.join(names)
         db.ws(ws=main_sheet).update_index(row=numero_ligne+1, col=int(destination_column), val=result)
         db.ws(ws=main_sheet).update_index(row=numero_ligne+1, col=int(destination_column) + 1, val=result_name)
         numero_ligne += 1
         print(numero_ligne)
-        xl.writexl(db=db, fn="cve_et_avis.xlsx") #Le fichier excel qui sera généré par le script
 
+    # Formate la date et l'heure comme tu le souhaites (par exemple, YYYY-MM-DD_HH-MM-SS)
+    now = datetime.now()
+    formatted_datetime = now.strftime("%Y-%m-%d_%H-%M-%S")
+
+    # Utilise le nom de fichier formaté lors de l'export
+    xl.writexl(db=db, fn=f"xlsx/{formatted_datetime}_cve_et_avis.xlsx")
+    print("fin")
 
 def extractor():
     choice = input("\n\nQue souhaitez-vous faire ?\n\t1 - Lister les CVE d'un avis Cert-FR\n\t2 - Lister les avis Cert-FR qui traitent une CVE\n\t3 - Matching dans un fichier\n\t4 - Voulez-vous exporter les données sous format CSV?\n\t5 - Quitter\n\n")
