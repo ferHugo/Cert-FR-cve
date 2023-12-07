@@ -7,7 +7,10 @@ import os
 from datetime import datetime
 import csv
 import pandas as pd
+import pyfiglet
 
+ascii_banner = pyfiglet.figlet_format("Script CERT-FR")
+print(ascii_banner)
 
 regex_cve = re.compile(r'CVE-\d{4}-\d{4,}')
 file_path = "./data/cert_fr_data.json"
@@ -215,8 +218,9 @@ def extractor():
         if choice == '3':
             #chemin ou se trouve le fichier 
             chemin = "/root/Cert-FR/"
-            fichier = input("Nom du fichier: (xxxxx.xlsx) : ")
-            file = chemin + fichier
+            fichier = input("Nom du fichier: ")
+            format = ".xlsx"
+            file = chemin + fichier + format
             main_sheet = input("Nom de la feuille principale : ")
             source_column = input("Numéro de la colonne contenant les CVE (a=1, b=2, ...): ")
             destination_column = input("Numéro de la colonne de destination (a=1, b=2, ...): ")
@@ -224,8 +228,9 @@ def extractor():
         
         if choice == '4':
             chemin = "/root/Cert-FR/"
-            fichier = input("Nom du fichier: (xxxxx.xlsx) : ")
-            file = chemin + fichier
+            fichier = input("Nom du fichier: ")
+            format = ".xlsx"
+            file = chemin + fichier + format
             main_sheet = input("Nom de la feuille principale : ")
             source_column = input("Numéro de la colonne contenant les CVE (a=1, b=2, ...): ")
             destination_column = input("Numéro de la colonne de destination (a=1, b=2, ...): ")
